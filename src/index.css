@@ -1,0 +1,697 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Orbitron:wght@400;700;900&display=swap');
+
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body, #root {
+  width: 100vw;
+  background-color: #000;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  color: #f0f0f0;
+}
+
+/* ============================================================
+   FIXED WEBGL CANVAS
+   ============================================================ */
+.webgl-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   SCROLL CONTAINER (sits on top of canvas)
+   ============================================================ */
+.scroll-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  opacity: 0; /* Starts hidden; GSAP fades it in */
+}
+
+/* ============================================================
+   STICKY TOP NAV-BAR
+   ============================================================ */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 5%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(77, 166, 255, 0.15);
+  pointer-events: auto;
+}
+
+.nav-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: #4da6ff;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #aac8ff;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: #fff; }
+
+/* ============================================================
+   PROGRESS BAR (scroll progress, top of screen)
+   ============================================================ */
+.progress-bar-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 300;
+  background: rgba(255,255,255,0.05);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4da6ff, #ffaa00, #ff4d4d);
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(77, 166, 255, 0.6);
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 80px 8%;
+  pointer-events: none;
+}
+
+.section:first-child { padding-top: 100px; }
+
+.content-block {
+  pointer-events: auto;
+  background: rgba(6, 12, 28, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(77, 166, 255, 0.2);
+  padding: 44px 48px;
+  border-radius: 20px;
+  max-width: 540px;
+  box-shadow:
+    0 0 0 1px rgba(77, 166, 255, 0.06),
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(77, 100, 255, 0.08) inset;
+  will-change: transform, opacity;
+}
+
+.content-block.align-right { margin-left: auto; }
+
+.content-block.center {
+  margin: 0 auto;
+  max-width: 860px;
+  text-align: center;
+}
+
+.content-block h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, #60b8ff 0%, #ffcc44 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  line-height: 1.25;
+}
+
+.content-block p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #ccdaee;
+}
+
+.phase-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffaa00;
+  background: rgba(255,170,0,0.1);
+  border: 1px solid rgba(255,170,0,0.4);
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   TELEMETRY / INTERACTIVE CARDS
+   ============================================================ */
+.interactive-card {
+  margin-top: 22px;
+  background: rgba(0, 10, 30, 0.6);
+  border: 1px solid rgba(77, 166, 255, 0.3);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.interactive-card:hover {
+  border-color: #4da6ff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(77, 166, 255, 0.25);
+}
+
+.interactive-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffaa00;
+  border-bottom: 1px solid rgba(255,170,0,0.25);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.interactive-card ul {
+  list-style: none;
+  padding: 0;
+  font-size: 13.5px;
+  color: #b0d0f0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.interactive-card li strong { color: #e0ecff; }
+
+/* With disc bullets for missions list */
+.missions-list {
+  list-style: disc;
+  padding-left: 20px;
+  font-size: 13.5px;
+  color: #b0d0f0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.missions-list li strong { color: #e0ecff; }
+.missions-list li em { color: #9dcfff; font-style: normal; font-weight: 600; }
+
+/* ============================================================
+   CONTROL HINT
+   ============================================================ */
+.control-hint {
+  margin-top: 18px;
+  background: rgba(255, 170, 0, 0.08);
+  border: 1px solid rgba(255, 170, 0, 0.4);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #ffcc66;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.control-hint:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 170, 0, 0.2);
+}
+
+/* ============================================================
+   SCROLL INDICATOR (animated mouse)
+   ============================================================ */
+.scroll-indicator {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #6688aa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.mouse-icon {
+  width: 24px;
+  height: 38px;
+  border: 2px solid rgba(77, 166, 255, 0.5);
+  border-radius: 13px;
+  position: relative;
+}
+
+.mouse-icon::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 6px;
+  background: #4da6ff;
+  border-radius: 2px;
+  animation: scrollWheel 1.6s cubic-bezier(.4,0,.6,1) infinite;
+}
+
+/* Animation 1: Mouse scroll wheel */
+@keyframes scrollWheel {
+  0%   { top: 7px; opacity: 1; }
+  80%  { top: 22px; opacity: 0; }
+  100% { top: 7px; opacity: 0; }
+}
+
+/* ============================================================
+   PROJECT DESCRIPTION SECTION
+   ============================================================ */
+.project-description h2 {
+  margin-bottom: 10px;
+}
+
+.desc-text {
+  text-align: left;
+  background: rgba(0,0,0,0.3);
+  border-left: 3px solid #4da6ff;
+  padding: 20px 24px;
+  border-radius: 0 10px 10px 0;
+  margin: 20px 0;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: #b8cfe8;
+}
+
+.desc-text strong { color: #fff; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: rgba(77, 166, 255, 0.07);
+  border: 1px solid rgba(77, 166, 255, 0.2);
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.stat-card:hover {
+  background: rgba(77, 166, 255, 0.13);
+  transform: translateY(-4px);
+}
+
+.stat-card .stat-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #4da6ff;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.stat-card .stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #7a99bb;
+}
+
+/* ============================================================
+   BRIEFING OVERLAY
+   ============================================================ */
+.briefing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 3, 12, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.briefing-container {
+  text-align: center;
+  background: rgba(6, 12, 30, 0.95);
+  padding: 64px 56px;
+  border-radius: 24px;
+  border: 1px solid rgba(77, 166, 255, 0.25);
+  max-width: 640px;
+  width: 90%;
+  box-shadow: 0 0 80px rgba(77, 100, 255, 0.15);
+  animation: heroEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Animation 2: Hero intro slide-up */
+@keyframes heroEntrance {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.mission-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #ffaa00;
+  margin-bottom: 16px;
+}
+
+.mission-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #5bc0ff 0%, #ffe066 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+.mission-subtitle {
+  font-size: 16px;
+  color: #7a99bb;
+  margin-bottom: 34px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.mission-facts {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+.fact-item {
+  text-align: center;
+}
+
+.fact-item .fact-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #4da6ff;
+  display: block;
+}
+
+.fact-item .fact-label {
+  font-size: 11px;
+  color: #556677;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.launch-btn {
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #1155dd 0%, #0099ff 100%);
+  color: #fff;
+  border: none;
+  padding: 18px 44px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 30px rgba(0, 100, 255, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.launch-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(0, 150, 255, 0.55);
+}
+
+.launch-btn:active { transform: translateY(-1px); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.primary-btn {
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #1155dd 0%, #0099ff 100%);
+  color: #fff;
+  border: none;
+  padding: 14px 32px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,100,255,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,150,255,0.5);
+}
+
+.mt-4 { margin-top: 24px; }
+
+/* Animation 3: Pulsing glow on "live" elements */
+@keyframes pulseBorder {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(77, 166, 255, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(77, 166, 255, 0); }
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #4dff99;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 18px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #4dff99;
+  border-radius: 50%;
+  animation: pulseBorder 1.5s infinite;
+}
+
+/* ============================================================
+   DIVIDER LINES
+   ============================================================ */
+.h-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(77,166,255,0.3), transparent);
+  margin: 24px 0;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+@media (max-width: 900px) {
+  .section { padding: 70px 5%; }
+  .content-block { padding: 32px 28px; }
+  .content-block h2 { font-size: 22px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .mission-facts { gap: 18px; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 600px) {
+  .section { padding: 60px 4%; }
+  .content-block { padding: 24px 18px; }
+  .content-block h2 { font-size: 18px; }
+  .content-block p  { font-size: 14px; }
+  .mission-title { font-size: 30px; }
+  .briefing-container { padding: 40px 24px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .mission-facts { flex-direction: column; align-items: center; gap: 12px; }
+}
+.content-block.is-hidden {
+  display: none;
+}
+
+.close-card-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(77, 166, 255, 0.3);
+  background: rgba(0, 10, 30, 0.6);
+  color: #4da6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.close-card-btn:hover {
+  background: #ff4d4d;
+  color: #fff;
+  border-color: #ff4d4d;
+  transform: scale(1.1);
+}
+
+.restore-card-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  padding: 12px 20px;
+  background: rgba(6, 12, 28, 0.82);
+  border: 1px solid #4da6ff;
+  border-radius: 30px;
+  color: #4da6ff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.pointer-events-auto {
+  pointer-events: auto;
+}
+
+/* ============================================================
+   NASA SOLAR SYSTEM EXPLORER (Full Screen)
+   ============================================================ */
+.explorer-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 100px 0 0 0 !important; /* Header space */
+  background: #000;
+  pointer-events: auto !important;
+  min-height: 100vh;
+  z-index: 50; /* Above the canvas */
+}
+
+.explorer-header-content {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 40px;
+  padding: 0 5%;
+}
+
+.explorer-header-content h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  background: linear-gradient(135deg, #60b8ff 0%, #ffcc44 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.explorer-header-content p {
+  color: #7a99bb;
+  font-size: 16px;
+}
+
+.nasa-iframe-fullscreen {
+  width: 100%;
+  height: 75vh;
+  background: #000;
+  position: relative;
+  border-top: 1px solid rgba(77, 166, 255, 0.2);
+  border-bottom: 1px solid rgba(77, 166, 255, 0.2);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+}
+
+.nasa-iframe-fullscreen iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.frame-overlay-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.frame-overlay-bottom .live-indicator {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(77, 255, 153, 0.3);
+}
