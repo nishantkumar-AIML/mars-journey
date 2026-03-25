@@ -304,6 +304,73 @@ function App() {
           </div>
         </section>
 
+        <footer className="mission-footer">
+          <div className="footer-content">
+            <div className="footer-header">
+              <div className="live-indicator small">
+                <span className="live-dot"></span>
+                ESTABLISHING SECURE CONNECTION
+              </div>
+              <h3>Mission Commander Profiles</h3>
+              <div className="divider"></div>
+            </div>
+
+            <div className="social-links-grid">
+              <a href="https://nishant-portfolio-001.vercel.app/" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">🌐</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>Portfolio</span>
+              </a>
+              
+              <a href="https://github.com/nishantkumar-AIML" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">🐙</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>GitHub</span>
+              </a>
+
+              <a href="https://www.linkedin.com/in/nishant-kumar-231048380?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">💼</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>LinkedIn</span>
+              </a>
+
+              <a href="https://leetcode.com/u/Nishantkumar011/" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">💻</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>LeetCode</span>
+              </a>
+
+              <a href="https://www.hackerrank.com/profile/nishant7042kumar" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">🏆</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>HackerRank</span>
+              </a>
+
+              <a href="https://t.me/TradeX_nk" target="_blank" rel="noreferrer" className="social-card">
+                <div className="social-icon-wrapper">
+                  <div className="social-icon">✈️</div>
+                  <div className="social-glow"></div>
+                </div>
+                <span>Telegram</span>
+              </a>
+            </div>
+
+            <div className="footer-bottom">
+              <div className="mission-tag">Mars Mission Discovery Initiative © 2026</div>
+              <div className="credit-tag">Crafted by <span className="highlight">Nishant Kumar</span></div>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
