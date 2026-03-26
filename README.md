@@ -14,7 +14,6 @@ Parallax scrolling and scroll-triggered animations drive the mission timeline.
 
 ### 🎮 Interactive Exploration
 - **Mission Controls**: Interactive launch and UI toggles (Mission Log Close/Restore).
-- **Rover Deployment**: Manual exploration of the Martian surface via WASD controls.
 - **NASA Explorer**: Direct integration with NASA's official Solar System navigation.
 
 ### 🎭 High-Fidelity Animation
